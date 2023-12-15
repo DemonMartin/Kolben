@@ -150,7 +150,7 @@ function rise(character) {
                     clearInterval(timerInterval);
                 }
             } else if (data[character].minHeight >= data[character].last) {
-                data[character].last = data[character].last + 0.005;
+                data[character].last = data[character].last + 0.0025;
             }
         }, 1)
     }

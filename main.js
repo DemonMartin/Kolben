@@ -142,7 +142,7 @@ function rise(character) {
         let i = setInterval(() => {
             img[data[character].id].style.backgroundPosition = "top " + data[character].last + "vh right";
             if (volume >= 0.003) {
-                data[character].last = data[character].last - (data[character].vektor * 0.5);
+                data[character].last = data[character].last - (data[character].vektor * 0.1);
 
                 if (data[character].last <= data[character].maxHeight) {
                     clearInterval(i);

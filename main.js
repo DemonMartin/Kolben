@@ -108,22 +108,25 @@ function startPitchDetection() {
         });
 }
 
+let startTime;
+
 function startTimer(character) {
     clearInterval(timerInterval);
+    startTime = performance.now();
     timerInterval = setInterval(() => {
         updateTimer(character);
     }, 10);
 }
 
 function updateTimer(character) {
-    const now = new Date();
-    data[character].min = now.getMinutes();
-    data[character].sec = now.getSeconds();
-    data[character].mill = Math.floor(now.getMilliseconds() / 10);
+    const elapsedTime = performance.now() - startTime;
+    const totalSeconds = Math.floor(elapsedTime / 1000);
+    data[character].min = Math.floor(totalSeconds / 60);
+    data[character].sec = totalSeconds % 60;
+    data[character].mill = Math.floor((elapsedTime % 1000) / 10);
 
     text[data[character].id].innerText = formatTime(character);
 }
-
 function formatTime(character) {
     const formatNumber = (n) => n < 10 ? '0' + n : n;
     return `${formatNumber(data[character].min)}:${formatNumber(data[character].sec)}:${formatNumber(data[character].mill)}`;

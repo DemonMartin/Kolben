@@ -107,7 +107,7 @@ function formatTime(characterData) {
 }
 
 // Rise function with speed customization
-function rise(character, speedMultiplier = 0.5) {
+function rise(character, speedMultiplier = 1) {
     if (imgs.length > 0) {
         clearIntervalAll();
         startTimer(character);
@@ -117,7 +117,7 @@ function rise(character, speedMultiplier = 0.5) {
         intervalRise = setInterval(() => {
             imgs[data[character].id].style.backgroundPosition = `top ${data[character].last}vh right`;
             if (volume >= 0.003) {
-                data[character].last -= data[character].vektor * 0.0001;
+                data[character].last -= data[character].vektor * 0.1;
                 if (data[character].last <= data[character].maxHeight) {
                     clearIntervalAll();
                 }

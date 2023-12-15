@@ -107,7 +107,7 @@ function formatTime(characterData) {
 }
 
 // Rise function with speed customization
-function rise(character, speedMultiplier = 1) {
+function rise(character, speedMultiplier = 0.5) {
     if (imgs.length > 0) {
         clearIntervalAll();
         startTimer(character);

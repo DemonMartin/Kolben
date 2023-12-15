@@ -117,18 +117,36 @@ function restartTimer(character) {
     data[character].min = 0;
 }
 
+function startTimer(character) {
+    clearInterval(timerInterval);
+    data[character].mill = 0;
+    data[character].sec = 0;
+    data[character].min = 0;
+    startTime = Date.now();
+
+    timerInterval = setInterval(() => {
+        updateTimer(character);
+    }, 10);
+}
+
+function updateTimer(character) {
+    const elapsedTime = Date.now() - startTime;
+    data[character].min = Math.floor(elapsedTime / 60000);
+    data[character].sec = Math.floor((elapsedTime % 60000) / 1000);
+    data[character].mill = Math.floor((elapsedTime % 1000) / 10);
+
+    text[data[character].id].innerText = formatTime(character);
+}
+
+function formatTime(character) {
+    const formatNumber = (n) => n < 10 ? '0' + n : n;
+    return `${formatNumber(data[character].min)}:${formatNumber(data[character].sec)}:${formatNumber(data[character].mill)}`;
+}
+
 function rise(character) {
     if (img) {
-        if (window.t) {
-            clearInterval(window.t)
-            restartTimer(character)
-        }
-        if (window.t2) {
-            clearInterval(window.t2)
-            restartTimer(character)
-        }
-
-        timer(character)
+        clearInterval(timerInterval);
+        startTimer(character);
 
         startPitchDetection();
         data[character].last = data[character].minHeight;
@@ -140,14 +158,7 @@ function rise(character) {
                 if (data[character].last <= data[character].maxHeight) {
                     clearInterval(i);
                     clearInterval(im);
-                    
-                    if (character == "minti") {
-                        clearInterval(window.t);
-                    }
-
-                    if (character == "pipetta") {
-                        clearInterval(window.t2);
-                    }
+                    clearInterval(timerInterval);
                 }
             } else if (data[character].minHeight >= data[character].last) {
                 data[character].last = data[character].last + 0.005;
@@ -155,68 +166,6 @@ function rise(character) {
         }, 1)
     }
 }
-
-
-function timer(c) {
-    const fn = (character) => {
-        data[character].mill++;
-
-        if (data[character].mill >= 100) {
-            data[character].mill = 0;
-            data[character].sec++;
-
-            if (data[character].sec >= 60) {
-                data[character].sec = 0;
-                data[character].misn++;
-
-                if (data[character].min >= 60) {
-                    data[character].min = 0;
-                }
-            }
-        }
-
-        text[data[c].id].innerText = tString(character);
-    };
-
-    if (c == "minti") {
-        t = setInterval(() => {
-            fn(c);
-        }, 10);
-    }
-
-    if (c == "pipetta") {
-        t2 = setInterval(() => {
-            fn(c);
-        }, 10);
-    }
-
-    function tString(character) {
-        var smill = "";
-        var ssec = "";
-        var smin = "";
-
-        if (data[character].mill < 10) {
-            smill = "0" + data[character].mill;
-        } else {
-            smill = data[character].mill;
-        }
-
-        if (data[character].sec < 10) {
-            ssec = "0" + data[character].sec;
-        } else {
-            ssec = data[character].sec;
-        }
-
-        if (data[character].min < 10) {
-            smin = "0" + data[character].min;
-        } else {
-            smin = data[character].min;
-        }
-
-        return smin + ":" + ssec + ":" + smill;
-    }
-}
-
 
 function createBubble(position, size, speed, rlspeed, high, difference) {
     var b = document.createElement("div")
@@ -233,8 +182,6 @@ function createBubble(position, size, speed, rlspeed, high, difference) {
         b.remove()
     }, (speed - 100));
 }
-
-window.onload = function () { newBubble() }
 
 function newBubble() {
     setTimeout(function () {
@@ -255,3 +202,5 @@ function rndNumber(min, max, decimal) {
 
     return (Math.floor(Math.random() * (max - min) + min) / decimal)
 }
+
+window.onload = function () { newBubble() }
